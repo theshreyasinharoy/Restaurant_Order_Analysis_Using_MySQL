@@ -11,6 +11,8 @@ The first objective is to better understand the items table by finding the numbe
 
 #### Solution:-
 ```
+           SELECT * FROM menu_items;
+
            SELECT 
                  COUNT(DISTINCT menu_item_id) AS Item_count
            FROM 
@@ -57,6 +59,49 @@ FROM
 GROUP BY
           category;
 ```
+---
+
+## Objective 2
+### Explore the orders table
+Your second objective is to better understand the orders table by finding the date range, the number of items within each order, and the orders with the highest number of items.
+
+### Task 
+
+#### 1. View the order_details table. What is the date range of the table?
+
+#### Solution:-
+```
+SELECT * FROM order_details;
+
+SELECT
+       MIN(order_date),
+       MAX(order_date)
+FROM
+       order_details;
+```
+
+#### 2. How many orders were made within this date range? How many items were ordered within this date range?
+
+#### Solution:-
+```
+SELECT
+       COUNT(DISTINCT order_id) AS order_count,
+       COUNT(DISTINCT item_id) AS item_count
+FROM
+       order_details;
+```
+#### 3. Which orders had the most number of items?
+
+#### Solution:-
+```
+```
+
+#### 4.How many orders had more than 12 items?
+
+#### Solution:-
+```
+```
+
 
 
      
