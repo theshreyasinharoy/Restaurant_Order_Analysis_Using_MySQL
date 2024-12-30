@@ -94,9 +94,132 @@ FROM
 
 #### Solution:-
 ```
+     SELECT
+               order_id
+     FROM
+               order_details
+     GROUP BY
+               order_id
+     HAVING  
+               COUNT(item_id) = 
+               (SELECT 
+                       MAX(item_count)
+                FROM (
+                        SELECT 
+                                   COUNT(item_id) AS item_count
+                        FROM
+                                   order_details
+                         GROUP BY
+                                   order_id
+                     ) AS counting
+                );
 ```
 
 #### 4.How many orders had more than 12 items?
+
+#### Solution:-
+```
+    SELECT
+             COUNT(order_id) AS orders_with_more_than_12_items
+    FROM (
+             SELECT 
+                       order_id, 
+                       COUNT(item_id) AS item_count
+             FROM 
+                       order_details
+             GROUP BY 
+                       order_id
+             HAVING 
+                       item_count > 12
+         ) AS subquery;
+```
+---
+
+## Objective 3
+### Analyze customer behavior
+Your final objective is to combine the items and orders tables, find the least and most ordered categories, and dive into the details of the highest spend orders.
+
+### Task
+
+#### 1. Combine the menu_items and order_details tables into a single table
+
+#### Solution:-
+```
+SELECT 
+       *
+FROM
+       order_details JOIN menu_items
+ON
+       order_details.item_id=menu_items.menu_item_id;
+```
+#### 2. What were the least and most ordered items? What categories were they in?
+
+#### Solution:-
+```
+WITH temp AS (
+SELECT 
+          category,
+          item_name,
+          COUNT(order_id) AS order_count,
+          RANK() OVER (ORDER BY COUNT(order_id) DESC) AS max_to_min
+FROM
+          order_details JOIN menu_items
+ON
+          order_details.item_id=menu_items.menu_item_id
+GROUP BY
+          category,
+          item_name
+)
+SELECT
+        category,
+		item_name AS most_ordered_item
+FROM
+		temp
+WHERE 
+        max_to_min=1;
+```
+```
+WITH temp AS (
+SELECT 
+          category,
+          item_name,
+          COUNT(order_id) AS order_count,
+          RANK() OVER (ORDER BY COUNT(order_id) ASC) AS min_to_max
+FROM
+          order_details JOIN menu_items
+ON
+          order_details.item_id=menu_items.menu_item_id
+GROUP BY
+          category,
+          item_name
+)
+SELECT
+        category,
+		item_name AS least_ordered_item
+FROM
+		temp
+WHERE 
+        min_to_max=1;
+```
+#### 3. What were the top 5 orders that spent the most money?
+
+#### Solution:-
+```
+SELECT
+          order_id,
+          SUM(price) AS Total_price
+FROM
+          order_details JOIN menu_items 
+ON 
+          order_details.item_id = menu_items.menu_item_id
+GROUP BY
+          order_id
+ORDER BY 
+          Total_price DESC
+LIMIT
+          5;
+```
+#### 4. View the details of the highest spend order. Which specific items were purchased?
 
 #### Solution:-
 ```
