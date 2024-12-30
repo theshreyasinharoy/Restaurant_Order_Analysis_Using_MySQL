@@ -172,9 +172,9 @@ GROUP BY
 )
 SELECT
         category,
-		item_name AS most_ordered_item
+        item_name AS most_ordered_item
 FROM
-		temp
+        temp
 WHERE 
         max_to_min=1;
 ```
@@ -195,9 +195,9 @@ GROUP BY
 )
 SELECT
         category,
-		item_name AS least_ordered_item
+        item_name AS least_ordered_item
 FROM
-		temp
+        temp
 WHERE 
         min_to_max=1;
 ```
